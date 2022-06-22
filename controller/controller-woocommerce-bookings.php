@@ -790,6 +790,10 @@ function bookacti_fill_wc_columns_in_bookings_export( $booking_items, $bookings,
 			if( empty( $users[ $booking_item[ 'customer_id' ] ] ) ) { continue; }
 			$user = $users[ $booking_item[ 'customer_id' ] ];
 			if( $user ) {
+
+				
+
+
 				if( ! empty( $user->billing_first_name ) && ( $booking_item[ 'order_id' ] || empty( $booking_item[ 'customer_first_name' ] ) ) ) { $booking_items[ $booking_id ][ 'customer_first_name' ] = $user->billing_first_name; }
 				if( ! empty( $user->billing_last_name )  && ( $booking_item[ 'order_id' ] || empty( $booking_item[ 'customer_last_name' ] ) ) )  { $booking_items[ $booking_id ][ 'customer_last_name' ]  = $user->billing_last_name; }
 				if( ! empty( $user->billing_email )      && ( $booking_item[ 'order_id' ] || empty( $booking_item[ 'customer_email' ] ) ) )      { $booking_items[ $booking_id ][ 'customer_email' ]      = $user->billing_email; }
@@ -803,7 +807,19 @@ function bookacti_fill_wc_columns_in_bookings_export( $booking_items, $bookings,
 				if( ! empty( $user->billing_postcode ) )    { $booking_items[ $booking_id ][ 'customer_postcode' ] = $user->billing_postcode; }
 				if( ! empty( $user->billing_country ) )     { $booking_items[ $booking_id ][ 'customer_country' ] = $user->billing_country; }
 				if( ! empty( $user->billing_state ) )       { $booking_items[ $booking_id ][ 'customer_state' ] = $user->billing_state; }
-				
+
+				//julien
+				if( ! empty( get_the_author_meta( 'pilote_taille',  $user->ID ) ) ) {  $booking_items[ $booking_id ][ 'pilote_taille' ] = get_the_author_meta( 'pilote_taille',  $user->ID ); }
+				if( ! empty( get_the_author_meta( 'pilote_poids',  $user->ID ) ) ) {  $booking_items[ $booking_id ][ 'pilote_poids' ] = get_the_author_meta( 'pilote_poids',  $user->ID ); }
+				if( ! empty( get_the_author_meta( 'pilote_nombre_vol',  $user->ID ) ) ) {  $booking_items[ $booking_id ][ 'pilote_nombre_vol' ] = get_the_author_meta( 'pilote_nombre_vol',  $user->ID ); }
+				if( ! empty( get_the_author_meta( 'pilote_dernier_vol',  $user->ID ) ) ) {  $booking_items[ $booking_id ][ 'pilote_dernier_vol' ] = get_the_author_meta( 'pilote_dernier_vol',  $user->ID ); }
+				if( ! empty( get_the_author_meta( 'pilote_license',  $user->ID ) ) ) {  $booking_items[ $booking_id ][ 'pilote_license' ] = get_the_author_meta( 'pilote_license',  $user->ID ); }
+				if( ! empty( get_the_author_meta( 'pilote_historique',  $user->ID ) ) ) {  $booking_items[ $booking_id ][ 'pilote_historique' ] = get_the_author_meta( 'pilote_historique',  $user->ID ); }
+				if( ! empty( get_the_author_meta( 'materiel_voile_marque_description',  $user->ID ) ) ) {  $booking_items[ $booking_id ][ 'materiel_voile_marque_description' ] = get_the_author_meta( 'materiel_voile_marque_description',  $user->ID ); }
+				if( ! empty( get_the_author_meta( 'materiel_sellette_marque_description',  $user->ID ) ) ) {  $booking_items[ $booking_id ][ 'materiel_sellette_marque_description' ] = get_the_author_meta( 'materiel_sellette_marque_description',  $user->ID ); }
+				if( ! empty( get_the_author_meta( 'materiel_radio_marque_description',  $user->ID ) ) ) {  $booking_items[ $booking_id ][ 'materiel_radio_marque_description' ] = get_the_author_meta( 'materiel_radio_marque_description',  $user->ID ); }
+				//
+
 				if( ! empty( $user->shipping_first_name ) ) { $booking_items[ $booking_id ][ 'customer_first_name_shipping' ] = $user->shipping_first_name; }
 				if( ! empty( $user->shipping_last_name ) )  { $booking_items[ $booking_id ][ 'customer_last_name_shipping' ] = $user->shipping_last_name; }
 				if( ! empty( $user->shipping_company ) )    { $booking_items[ $booking_id ][ 'customer_company_shipping' ] = $user->shipping_company; }
@@ -883,6 +899,18 @@ function bookacti_wc_bookings_export_columns( $columns_labels ) {
 	$customer_columns_labels[ 'customer_postcode' ]	= esc_html__( 'Customer postcode / ZIP', 'booking-activities' );
 	$customer_columns_labels[ 'customer_country' ]	= esc_html__( 'Customer country / region', 'booking-activities' );
 	$customer_columns_labels[ 'customer_state' ]	= esc_html__( 'Customer state / county', 'booking-activities' );
+
+ 	//julien
+	$customer_columns_labels[ 'pilote_taille' ] = esc_html__( 'Taille (en cm)', 'booking-activities' );
+	$customer_columns_labels[ 'pilote_poids' ] = esc_html__( 'Poids (en kg)', 'booking-activities' );
+	$customer_columns_labels[ 'pilote_nombre_vol' ] = esc_html__( 'Nombre de vol', 'booking-activities' );
+	$customer_columns_labels[ 'pilote_dernier_vol' ] = esc_html__( 'Date du dernier vol', 'booking-activities' );
+	$customer_columns_labels[ 'pilote_license' ] = esc_html__( 'Licence', 'booking-activities' );
+	$customer_columns_labels[ 'pilote_historique' ] = esc_html__( 'Historique', 'booking-activities' );
+	$customer_columns_labels[ 'materiel_voile_marque_description' ] = esc_html__( 'Marque et description de la voile', 'booking-activities' );
+	$customer_columns_labels[ 'materiel_sellette_marque_description' ] = esc_html__( 'Marque et description de la sellette/parachute de secours', 'booking-activities' );
+	$customer_columns_labels[ 'materiel_radio_marque_description' ] = esc_html__( 'Marque et description de la radio', 'booking-activities' );
+	//
 	
 	$customer_columns_labels[ 'customer_first_name_shipping' ]	= esc_html__( 'Customer first name', 'booking-activities' ) . ' (' . esc_html__( 'Shipping', 'booking-activities' ) . ')';
 	$customer_columns_labels[ 'customer_last_name_shipping' ]	= esc_html__( 'Customer last name', 'booking-activities' ) . ' (' . esc_html__( 'Shipping', 'booking-activities' ) . ')';
@@ -892,6 +920,8 @@ function bookacti_wc_bookings_export_columns( $columns_labels ) {
 	$customer_columns_labels[ 'customer_postcode_shipping' ]	= esc_html__( 'Customer postcode / ZIP', 'booking-activities' ) . ' (' . esc_html__( 'Shipping', 'booking-activities' ) . ')';
 	$customer_columns_labels[ 'customer_country_shipping' ]		= esc_html__( 'Customer country / region', 'booking-activities' ) . ' (' . esc_html__( 'Shipping', 'booking-activities' ) . ')';
 	$customer_columns_labels[ 'customer_state_shipping' ]		= esc_html__( 'Customer state / county', 'booking-activities' ) . ' (' . esc_html__( 'Shipping', 'booking-activities' ) . ')';
+
+
 	
 	$columns_labels = array_slice( $columns_labels, 0, $pos + 1 ) + $customer_columns_labels + array_slice( $columns_labels, $pos );
 	
