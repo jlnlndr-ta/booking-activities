@@ -808,7 +808,8 @@ function bookacti_fill_wc_columns_in_bookings_export( $booking_items, $bookings,
 				if( ! empty( $user->billing_country ) )     { $booking_items[ $booking_id ][ 'customer_country' ] = $user->billing_country; }
 				if( ! empty( $user->billing_state ) )       { $booking_items[ $booking_id ][ 'customer_state' ] = $user->billing_state; }
 
-				//julien
+				// ajout du contenu pour les champs perso pour le projet espace 3d
+
 				if( ! empty( get_the_author_meta( 'pilote_taille',  $user->ID ) ) ) {  $booking_items[ $booking_id ][ 'pilote_taille' ] = get_the_author_meta( 'pilote_taille',  $user->ID ); }
 				if( ! empty( get_the_author_meta( 'pilote_poids',  $user->ID ) ) ) {  $booking_items[ $booking_id ][ 'pilote_poids' ] = get_the_author_meta( 'pilote_poids',  $user->ID ); }
 				if( ! empty( get_the_author_meta( 'pilote_nombre_vol',  $user->ID ) ) ) {  $booking_items[ $booking_id ][ 'pilote_nombre_vol' ] = get_the_author_meta( 'pilote_nombre_vol',  $user->ID ); }
@@ -900,7 +901,7 @@ function bookacti_wc_bookings_export_columns( $columns_labels ) {
 	$customer_columns_labels[ 'customer_country' ]	= esc_html__( 'Customer country / region', 'booking-activities' );
 	$customer_columns_labels[ 'customer_state' ]	= esc_html__( 'Customer state / county', 'booking-activities' );
 
- 	//julien
+ 	// ajout des colonnes pour les champs perso pour le projet espace 3d
 	$customer_columns_labels[ 'pilote_taille' ] = esc_html__( 'Taille (en cm)', 'booking-activities' );
 	$customer_columns_labels[ 'pilote_poids' ] = esc_html__( 'Poids (en kg)', 'booking-activities' );
 	$customer_columns_labels[ 'pilote_nombre_vol' ] = esc_html__( 'Nombre de vol', 'booking-activities' );
