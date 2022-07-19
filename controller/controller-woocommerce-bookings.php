@@ -922,8 +922,6 @@ function bookacti_wc_bookings_export_columns( $columns_labels ) {
 	$customer_columns_labels[ 'customer_country_shipping' ]		= esc_html__( 'Customer country / region', 'booking-activities' ) . ' (' . esc_html__( 'Shipping', 'booking-activities' ) . ')';
 	$customer_columns_labels[ 'customer_state_shipping' ]		= esc_html__( 'Customer state / county', 'booking-activities' ) . ' (' . esc_html__( 'Shipping', 'booking-activities' ) . ')';
 
-
-	
 	$columns_labels = array_slice( $columns_labels, 0, $pos + 1 ) + $customer_columns_labels + array_slice( $columns_labels, $pos );
 	
 	return $columns_labels;

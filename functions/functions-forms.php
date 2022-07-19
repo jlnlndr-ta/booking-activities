@@ -1117,7 +1117,7 @@ function bookacti_sanitize_form_field_values( $values, $field_type = '' ) {
 		foreach( $default_register_data as $field_name => $register_field ) {
 			$default_register_values[ $field_name ] = $register_field[ 'value' ];
 		}
-		$register_keys_by_type = array( 'str' => array( 'first_name', 'last_name', 'phone' ) );
+		$register_keys_by_type = array( 'str' => array( 'first_name', 'last_name', 'phone', 'pilote_taille', 'pilote_poids' ) );
 		$sanitized_register_values = bookacti_sanitize_values( $default_register_values, $values, $register_keys_by_type );
 		
 		$sanitized_values = array_merge( $sanitized_values, $sanitized_register_values );
@@ -1321,6 +1321,8 @@ function bookacti_register_a_new_user( $login_values, $login_data ) {
 	// Insert user metadata
 	$user_meta = array();
 	if( ! empty( $login_values[ 'phone' ] ) ) { $user_meta[ 'phone' ] = $login_values[ 'phone' ]; }
+	if( ! empty( $login_values[ 'pilote_taille' ] ) ) { $user_meta[ 'pilote_taille' ] = $login_values[ 'pilote_taille' ]; }
+	if( ! empty( $login_values[ 'pilote_poids' ] ) ) { $user_meta[ 'pilote_poids' ] = $login_values[ 'pilote_poids' ]; }
 	$user_meta = apply_filters( 'bookacti_register_user_metadata', $user_meta, $user, $login_values );
 	foreach( $user_meta as $meta_key => $meta_value ) {
 		update_user_meta( $user_id, $meta_key, $meta_value );
@@ -1649,6 +1651,26 @@ function bookacti_get_register_fields_default_data( $context = 'view' ) {
 			'name'			=> 'phone', 
 			'type'			=> 'tel', 
 			'label'			=> esc_html__( 'Phone number', 'booking-activities' ), 
+			'placeholder'	=> '', 
+			'tip'			=> '', 
+			'value'			=> '', 
+			'required'		=> 0, 
+			'displayed'		=> 1
+		),
+		'pilote_taille' => array( 
+			'name'			=> 'pilote_taille', 
+			'type'			=> 'number', 
+			'label'			=> esc_html__( 'pilote_taille', 'booking-activities' ), 
+			'placeholder'	=> '', 
+			'tip'			=> '', 
+			'value'			=> '', 
+			'required'		=> 0, 
+			'displayed'		=> 1
+		),
+		'pilote_poids' => array( 
+			'name'			=> 'pilote_poids', 
+			'type'			=> 'number', 
+			'label'			=> esc_html__( 'pilote_poids', 'booking-activities' ), 
 			'placeholder'	=> '', 
 			'tip'			=> '', 
 			'value'			=> '', 
