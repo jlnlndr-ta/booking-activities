@@ -79,7 +79,8 @@ if( ! class_exists( 'Bookings_List_Table' ) ) {
 				'activity_title'=> esc_html__( 'Activity', 'booking-activities' ),
 				'creation_date'	=> esc_html__( 'Date', 'booking-activities' ),
 				'price_details'	=> esc_html__( 'Price details', 'booking-activities' ),
-				'actions'		=> esc_html__( 'Actions', 'booking-activities' )
+				'actions'		=> esc_html__( 'Actions', 'booking-activities' ),
+				'informations'		=> esc_html__( 'Informations', 'booking-activities' )
 			));
 
 			
@@ -106,7 +107,8 @@ if( ! class_exists( 'Bookings_List_Table' ) ) {
 				110 => 'activity_title',
 				120 => 'creation_date',
 				130 => 'price_details',
-				1000 => 'actions'
+				1000 => 'actions',
+				999 => 'informations'
 			));
 
 			ksort( $columns_order );
@@ -274,7 +276,7 @@ if( ! class_exists( 'Bookings_List_Table' ) ) {
 			$users = bookacti_get_users_data( array( 'include' => $this->user_ids ) );
 			$roles_names = bookacti_get_roles();
 			$can_edit_users = current_user_can( 'edit_users' );
-			
+	
 			// Get datetime format
 			$datetime_format    = bookacti_get_message( 'date_format_long' );
 			$quantity_separator = bookacti_get_message( 'quantity_separator' );
@@ -284,7 +286,7 @@ if( ! class_exists( 'Bookings_List_Table' ) ) {
 			foreach( $bookings as $booking ) {
 				$group = $booking->group_id && ! empty( $booking_groups[ $booking->group_id ] ) ? $booking_groups[ $booking->group_id ] : null;
 				$grouped_bookings = $booking->group_id && ! empty( $bookings_per_group[ $booking->group_id ] ) && ! $single_only ? $bookings_per_group[ $booking->group_id ] : array( $booking );
-		
+
 				// Display one single row for a booking group, instead of each bookings of the group
 				if( $booking->group_id && $may_have_groups && ! $single_only ) {
 					// If the group row has already been displayed, or if it is not found, continue
@@ -314,6 +316,10 @@ if( ! class_exists( 'Bookings_List_Table' ) ) {
 					
 				// Single booking
 				} else {
+
+					$pilote_taille = get_the_author_meta( 'pilote_taille', $this->user_ids );
+
+
 					$booking_id_link = '<a href="' . admin_url( 'admin.php?page=bookacti_bookings&booking_id=' . $booking->id . '&event_id=' . $booking->event_id . '&event_start=' . $booking->event_start . '&event_end=' . $booking->event_end ) . '">' . $booking->id. '</a>';
 					$group_id_link   = '<a href="' . admin_url( 'admin.php?page=bookacti_bookings&booking_group_id=' . $booking->group_id . '&group_by=booking_group&event_group_id=' . ( $group ? $group->event_group_id : '' ) ) . '">' . $booking->group_id . '</a>';
 					
@@ -347,6 +353,17 @@ if( ! class_exists( 'Bookings_List_Table' ) ) {
 				/* translators: Datetime format. Must be adapted to each country. Use wp date_i18n documentation to find the appropriated combinaison https://wordpress.org/support/article/formatting-date-and-time/ */
 				$creation_date = $creation_date_raw ? bookacti_format_datetime( $creation_date_raw, __( 'F d, Y', BOOKACTI_PLUGIN_NAME ) ) : '';
 				$creation_date = $creation_date ? '<span title="' . $booking->creation_date . '">' . $creation_date . '</span>' : '';
+
+
+				$all_user_data = '<ul>
+				<li> taille : ' . get_the_author_meta( 'pilote_taille',  $user_id ) . '</li>
+				<li>poids : ' . get_the_author_meta( 'pilote_poids',  $user_id ) . '</li>
+				<li>nbr vol : '.  get_the_author_meta( 'pilote_nombre_vol',  $user_id ) .'</li>
+				<li>dernier vol : '.  get_the_author_meta( 'pilote_dernier_vol',  $user_id ) .'</li>
+				<li>license : '.  get_the_author_meta( 'pilote_license',  $user_id ) .'</li>
+				<li>voile : '.  get_the_author_meta( 'materiel_voile_marque_description',  $user_id ) .'</li>
+				<li>sellette : '.  get_the_author_meta( 'materiel_sellette_marque_description',  $user_id ) .'</li>
+				<li>radio : '.  get_the_author_meta( 'materiel_radio_marque_description',  $user_id ) .'</li></ul>';
 				
 				// Format customer column
 				// If the customer has an account
@@ -358,6 +375,11 @@ if( ! class_exists( 'Bookings_List_Table' ) ) {
 					$phone        = ! empty( $user->phone ) ? $user->phone : '';
 					$roles        = ! empty( $user->roles ) ? implode( ', ', array_replace( array_combine( $user->roles, $user->roles ), array_intersect_key( $roles_names, array_flip( $user->roles ) ) ) ) : '';
 					
+					// information à ajouter ici 
+					$informations = $all_user_data;
+
+
+
 				// If the booking was made without account
 				} else if( $user_id === $unknown_user_id || is_email( $user_id ) ) {
 					$user     = null;
@@ -371,6 +393,7 @@ if( ! class_exists( 'Bookings_List_Table' ) ) {
 					$email = ! empty( $booking_meta->user_email ) ? $booking_meta->user_email : '';
 					$phone = ! empty( $booking_meta->user_phone ) ? $booking_meta->user_phone : '';
 					$roles = '';
+					$informations =  '';
 					
 				// Any other cases
 				} else {
@@ -379,6 +402,8 @@ if( ! class_exists( 'Bookings_List_Table' ) ) {
 					$email    = '';
 					$phone    = '';
 					$roles    = '';
+					$informations =  '';
+
 				}
 				
 				// Add info on the primary column to make them directly visible in responsive view
@@ -422,6 +447,7 @@ if( ! class_exists( 'Bookings_List_Table' ) ) {
 					'activity_title'    => $activity_title ? apply_filters( 'bookacti_translate_text', $activity_title ) : $activity_title,
 					'creation_date'     => $creation_date,
 					'actions'           => $actions,
+					'informations'      => $informations,
 					'refund_actions'    => $refund_actions,
 					'order_id'          => $order_id,
 					'primary_data'      => $primary_data,
